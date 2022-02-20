@@ -34,6 +34,7 @@ class TrackingController(private val context: Context) : PositionListener, Netwo
     private val positionProvider = PositionProviderFactory.create(context, this)
     private val databaseHelper = DatabaseHelper(context)
     private val networkManager = NetworkManager(context, this)
+    private val obd = ObdController(context)
 
     private val url: String = preferences.getString(MainFragment.KEY_URL, context.getString(R.string.settings_url_default_value))!!
     private val buffer: Boolean = preferences.getBoolean(MainFragment.KEY_BUFFER, true)
@@ -51,6 +52,7 @@ class TrackingController(private val context: Context) : PositionListener, Netwo
             Log.w(TAG, e)
         }
         networkManager.start()
+        obd.init()
     }
 
     fun stop() {
@@ -65,6 +67,7 @@ class TrackingController(private val context: Context) : PositionListener, Netwo
 
     override fun onPositionUpdate(position: Position) {
         StatusActivity.addMessage(context.getString(R.string.status_location_update))
+        obd.getExtras(position);
         if (buffer) {
             write(position)
         } else {

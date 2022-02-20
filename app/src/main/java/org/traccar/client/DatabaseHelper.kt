@@ -23,6 +23,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.AsyncTask
 import java.sql.Date
+import org.json.JSONObject
 
 class DatabaseHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -65,7 +66,8 @@ class DatabaseHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAM
                     "course REAL," +
                     "accuracy REAL," +
                     "battery REAL," +
-                    "mock INTEGER)"
+                    "mock INTEGER," +
+                    "extras TEXT)"
         )
     }
 
@@ -91,6 +93,7 @@ class DatabaseHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAM
         values.put("accuracy", position.accuracy)
         values.put("battery", position.battery)
         values.put("mock", if (position.mock) 1 else 0)
+        values.put("extras", position.extras.toString())
         db.insertOrThrow("position", null, values)
     }
 
@@ -118,6 +121,7 @@ class DatabaseHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAM
                     accuracy = cursor.getDouble(cursor.getColumnIndex("accuracy")),
                     battery = cursor.getDouble(cursor.getColumnIndex("battery")),
                     mock = cursor.getInt(cursor.getColumnIndex("mock")) > 0,
+                    extras = JSONObject(cursor.getString(cursor.getColumnIndex("extras")))
                 )
             }
         }
@@ -147,7 +151,7 @@ class DatabaseHelper(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
     companion object {
-        const val DATABASE_VERSION = 3
+        const val DATABASE_VERSION = 4
         const val DATABASE_NAME = "traccar.db"
     }
 

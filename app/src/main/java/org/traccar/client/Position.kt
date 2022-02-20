@@ -19,6 +19,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import java.util.*
+import org.json.JSONObject
 
 data class Position(
     val id: Long = 0,
@@ -32,6 +33,7 @@ data class Position(
     val accuracy: Double = 0.0,
     val battery: Double = 0.0,
     val mock: Boolean = false,
+    val extras: JSONObject = JSONObject()
 ) {
 
     constructor(deviceId: String, location: Location, battery: Double) : this(
@@ -45,5 +47,6 @@ data class Position(
         accuracy = if (location.provider != null && location.provider != LocationManager.GPS_PROVIDER) location.accuracy.toDouble() else 0.0,
         battery = battery,
         mock = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) location.isFromMockProvider else false,
+        extras = JSONObject()
     )
 }

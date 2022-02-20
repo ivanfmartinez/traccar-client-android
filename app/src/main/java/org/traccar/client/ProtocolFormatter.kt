@@ -37,6 +37,9 @@ object ProtocolFormatter {
         if (alarm != null) {
             builder.appendQueryParameter("alarm", alarm)
         }
+        position.extras.keys().forEach {
+		k -> builder.appendQueryParameter(k, position.extras.getString(k));
+        }
         return builder.build().toString()
     }
 }
